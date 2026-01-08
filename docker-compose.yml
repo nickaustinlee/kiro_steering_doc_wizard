@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  test-py311:
+    build:
+      context: .
+      target: test-py311
+    volumes:
+      - .:/app
+    command: poetry run pytest -v
+
+  test-py312:
+    build:
+      context: .
+      target: test-py312
+    volumes:
+      - .:/app
+    command: poetry run pytest -v
+
+  test-py313:
+    build:
+      context: .
+      target: test-py313
+    volumes:
+      - .:/app
+    command: poetry run pytest -v
+
+  # Service for running all tests across versions
+  test-all:
+    build:
+      context: .
+      target: test-py311
+    volumes:
+      - .:/app
+    command: >
+      sh -c "
+        echo 'Testing Python 3.11...' &&
+        poetry run pytest -v &&
+        echo 'All tests completed for Python 3.11'
+      "

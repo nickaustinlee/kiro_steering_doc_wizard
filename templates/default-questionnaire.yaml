@@ -1,0 +1,116 @@
+# Default Kiro Steering Docs Questionnaire
+# This YAML file defines the questions asked by the steering docs wizard
+# You can customize this file or create your own questionnaire
+
+metadata:
+  name: "Kiro Project Configuration"
+  version: "1.0"
+  description: "Standard questionnaire for Kiro project setup and steering document generation"
+
+sections:
+  - name: "testing"
+    title: "Testing Configuration"
+    questions:
+      - id: "local_testing"
+        type: "choice"
+        prompt: "Select your local testing preference"
+        choices:
+          - value: "docker"
+            label: "Docker containers"
+          - value: "pytest"
+            label: "Pytest only"
+            default: true
+          - value: "both"
+            label: "Both Docker and Pytest"
+          - value: "none"
+            label: "No specific testing preference"
+
+      - id: "use_docker"
+        type: "boolean"
+        prompt: "Do you want to include Docker support?"
+        default_value: false
+        condition: "local_testing == 'none'"
+
+      - id: "use_pytest"
+        type: "boolean"
+        prompt: "Do you want to include Pytest support?"
+        default_value: true
+        condition: "local_testing == 'none'"
+
+  - name: "github"
+    title: "GitHub Configuration"
+    questions:
+      - id: "has_repository"
+        type: "boolean"
+        prompt: "Do you have a GitHub repository for this project?"
+        default_value: false
+
+      - id: "repository_url"
+        type: "text"
+        prompt: "Enter your GitHub repository URL (e.g., https://github.com/user/repo)"
+        condition: "has_repository == true"
+        validation:
+          regex: "^https://github\\.com/[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+/?$"
+          error_message: "Please use format: https://github.com/username/repository"
+        retry_attempts: 3
+
+      - id: "use_github_actions"
+        type: "boolean"
+        prompt: "Do you want to include GitHub Actions testing configuration?"
+        default_value: true
+        condition: "has_repository == true"
+
+  - name: "formatting"
+    title: "Code Formatting Configuration"
+    questions:
+      - id: "use_black"
+        type: "boolean"
+        prompt: "Do you want to use Black code formatter?"
+        default_value: true
+
+      - id: "use_google_style"
+        type: "boolean"
+        prompt: "Do you want to follow Google Python style guide?"
+        default_value: true
+
+      - id: "has_custom_rules"
+        type: "boolean"
+        prompt: "Do you have custom formatting rules to add?"
+        default_value: false
+
+      - id: "custom_rules"
+        type: "multiline"
+        prompt: "Enter your custom formatting rules (press Enter twice to finish)"
+        condition: "has_custom_rules == true"
+        optional: true
+
+  - name: "virtualization"
+    title: "Virtualization Configuration"
+    questions:
+      - id: "virtualization_preference"
+        type: "choice"
+        prompt: "Select your virtualization preference"
+        choices:
+          - value: "venv"
+            label: "Python venv (built-in virtual environments)"
+          - value: "poetry"
+            label: "Poetry (dependency management and packaging)"
+            default: true
+          - value: "poetry_with_venv_docs"
+            label: "Poetry with venv documentation"
+
+      - id: "include_venv_docs"
+        type: "boolean"
+        prompt: "Do you want to include venv documentation in the guidelines?"
+        default_value: false
+        condition: "virtualization_preference == 'venv'"
+
+      - id: "include_venv_docs_poetry"
+        type: "boolean"
+        prompt: "Do you want to include venv documentation in the guidelines?"
+        default_value: false
+        condition: "virtualization_preference == 'poetry'"
+
+templates:
+  development_guidelines: "development-guidelines.md.j2"
+  llm_guidance: "llm-guidance.md.j2"

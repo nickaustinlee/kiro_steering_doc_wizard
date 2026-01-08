@@ -1,0 +1,117 @@
+# LLM Development Guidance
+
+**Generated on**: {{ creation_date }}
+
+## Project Context
+
+This document provides guidance for AI development assistants working on this project.
+
+### Development Environment
+- **Testing Framework**: {{ get_answer('local_testing', 'Not specified') }}
+- **Virtualization**: {{ get_answer('virtualization_preference', 'Not specified') }}
+- **Code Formatting**: {% if is_true('use_black') %}Black{% else %}Manual{% endif %}{% if is_true('use_google_style') %} + Google Style{% else %} + Custom Style{% endif %}
+
+### Repository Information
+{%- if has_answer('repository_url') %}
+- **GitHub Repository**: {{ get_answer('repository_url') }}
+- **CI/CD**: {% if is_true('use_github_actions') %}GitHub Actions configured{% else %}Manual testing{% endif %}
+{%- else %}
+- **Repository**: Local development (no remote repository configured)
+{%- endif %}
+
+## Development Guidelines
+
+### Code Quality Standards
+
+{%- if is_true('use_black') %}
+
+#### Formatting
+- Use Black formatter for all Python code
+- Maintain consistent code formatting across the project
+{%- endif %}
+
+{%- if is_true('use_google_style') %}
+
+#### Style Guide
+- Follow Google Python Style Guide
+- Use proper docstring formats
+- Maintain clear and descriptive variable names
+{%- endif %}
+
+{%- if has_answer('custom_rules') %}
+
+#### Custom Formatting Rules
+The project has specific formatting requirements:
+
+```
+{{ get_answer('custom_rules') }}
+```
+{%- endif %}
+
+### Testing Approach
+
+{%- if is_true('use_pytest') or get_answer('local_testing') == 'pytest' or get_answer('local_testing') == 'both' %}
+- Use pytest for unit testing and integration testing
+- Write comprehensive test coverage for new features
+- Follow test-driven development practices where appropriate
+{%- endif %}
+
+{%- if is_true('use_docker') or get_answer('local_testing') == 'docker' or get_answer('local_testing') == 'both' %}
+- Use Docker for consistent testing environments
+- Ensure tests pass in containerized environments
+- Consider multi-stage Docker builds for testing
+{%- endif %}
+
+### Environment Management
+
+{%- if get_answer('virtualization_preference') == 'poetry' or get_answer('virtualization_preference') == 'poetry_with_venv_docs' %}
+- Use Poetry for dependency management
+- Update pyproject.toml for new dependencies
+- Use `poetry install` for environment setup
+- Use `poetry add` for adding new dependencies
+{%- elif get_answer('virtualization_preference') == 'venv' %}
+- Use Python venv for virtual environments
+- Update requirements.txt for new dependencies
+- Document environment setup in README
+{%- endif %}
+
+## AI Assistant Guidelines
+
+### Efficiency and Collaboration
+1. **Incremental Development**: Make small, focused changes that can be easily reviewed
+2. **Clear Communication**: Explain reasoning behind architectural decisions
+3. **Error Handling**: Implement robust error handling and user-friendly error messages
+4. **Documentation**: Keep code comments and documentation up to date
+5. **Testing**: Write tests for new functionality and ensure existing tests pass
+
+### Code Generation Best Practices
+1. **Follow Project Patterns**: Maintain consistency with existing code structure
+2. **Type Hints**: Use Python type hints for better code clarity
+3. **Error Messages**: Provide helpful error messages with suggested solutions
+4. **Performance**: Consider performance implications of code changes
+5. **Security**: Follow security best practices for file operations and user input
+
+### Project-Specific Considerations
+
+{%- if is_true('use_github_actions') %}
+- **CI/CD Integration**: Ensure changes are compatible with GitHub Actions workflows
+{%- endif %}
+
+{%- if get_answer('local_testing') != 'none' %}
+- **Testing Strategy**: Align with the project's {{ get_answer('local_testing') }} testing approach
+{%- endif %}
+
+- **Development Workflow**: Respect the {{ get_answer('virtualization_preference', 'specified') }} environment setup
+
+{%- if has_answer('custom_rules') %}
+- **Custom Requirements**: Follow the project-specific formatting rules defined above
+{%- endif %}
+
+### Current Project State
+- **Configuration Date**: {{ creation_date }}
+- **Project Path**: {{ project_path }}
+- **Questionnaire**: {{ metadata.name }} v{{ metadata.version }}
+
+---
+
+*This guidance document was automatically generated based on project configuration using {{ metadata.description }}. Update as the project evolves.*
